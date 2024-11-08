@@ -32,14 +32,15 @@ export class Gameboard {
   }
 
   getPosition(ship) {
-    const results = [];
+    let results = [];
     for (let [key, value] of Object.entries(this.shipPositions)) {
       if (value.getName() === ship.getName()) {
         const temp = key.split(',').map(Number);
         results.push(temp);
       }
     }
-    return results;
+    if (results.length > 0) return results;
+    return null;
   }
 
   isValidCooridinate(coordinate) {
@@ -74,6 +75,7 @@ export class Gameboard {
   isPlaceable(ship, coordinate, orientation) {
     let result = true;
     if (!this.isValidOrientation(orientation)) return false;
+    if (this.getPosition(ship)) return false;
     if (orientation === 'north') {
       for (let i = 0; i < ship.getLength(); i++) {
         const current = [coordinate[0], coordinate[1] + i];
