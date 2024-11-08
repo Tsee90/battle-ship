@@ -73,8 +73,13 @@ export class Gameboard {
 
   isPlaceable(ship, coordinate, orientation) {
     let result = true;
-    if (!this.isValidOrientation(orientation)) return false;
-    if (this.getCoordinates(ship)) return false;
+    if (
+      !(ship instanceof Ship) ||
+      !this.isValidOrientation(orientation) ||
+      this.getCoordinates(ship)
+    )
+      return false;
+
     if (orientation === 'north') {
       for (let i = 0; i < ship.getLength(); i++) {
         const current = [coordinate[0], coordinate[1] + i];

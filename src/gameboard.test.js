@@ -42,6 +42,13 @@ test('place two ships', () => {
   ]);
 });
 
+test('place non-ship error', () => {
+  const gameboard = new Gameboard();
+  expect(() => gameboard.place('String Ship', [0, 0], 'north')).toThrow(
+    'Invalid placement'
+  );
+});
+
 test('place ship error: orientation off board', () => {
   const gameboard = new Gameboard();
   expect(() =>
