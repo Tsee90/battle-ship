@@ -139,6 +139,7 @@ export class Gameboard {
         this.shipCoordinates[`${current}`] = ship;
       }
     }
+    return true;
   }
 
   isHit(coordinate) {
@@ -158,6 +159,18 @@ export class Gameboard {
       ship.hit();
       return true;
     }
+    return false;
+  }
+
+  isAllSunk() {
+    if (
+      this.carrier.isSunk() &&
+      this.battleship.isSunk() &&
+      this.destroyer.isSunk() &&
+      this.submarine.isSunk() &&
+      this.patrol.isSunk()
+    )
+      return true;
     return false;
   }
 }

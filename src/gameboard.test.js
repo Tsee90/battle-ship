@@ -104,7 +104,7 @@ test('hit error overlap', () => {
   );
 });
 
-test('sink ship', () => {
+test('sink ship via receiveAttack', () => {
   const gameboard = new Gameboard();
   gameboard.place(gameboard.getPatrol(), [5, 5], 'south');
   gameboard.receiveAttack([5, 5]);
