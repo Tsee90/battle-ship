@@ -7,8 +7,8 @@ export class Gameboard {
     this.destroyer = new Ship('destroyer', 3);
     this.submarine = new Ship('submarine', 3);
     this.patrol = new Ship('patrol', 2);
-    this.shipPositions = {};
-    this.hitPositions = {};
+    this.shipCoordinates = {};
+    this.hitCoordinates = [];
   }
 
   getCarrier() {
@@ -31,9 +31,9 @@ export class Gameboard {
     return this.patrol;
   }
 
-  getPosition(ship) {
+  getCoordinates(ship) {
     let results = [];
-    for (let [key, value] of Object.entries(this.shipPositions)) {
+    for (let [key, value] of Object.entries(this.shipCoordinates)) {
       if (value.getName() === ship.getName()) {
         const temp = key.split(',').map(Number);
         results.push(temp);
@@ -68,14 +68,13 @@ export class Gameboard {
   }
 
   isEmpty(coordinate) {
-    if (`${coordinate}` in this.shipPositions) return false;
-    return true;
+    return `${coordinate}` in this.shipCoordinates ? false : true;
   }
 
   isPlaceable(ship, coordinate, orientation) {
     let result = true;
     if (!this.isValidOrientation(orientation)) return false;
-    if (this.getPosition(ship)) return false;
+    if (this.getCoordinates(ship)) return false;
     if (orientation === 'north') {
       for (let i = 0; i < ship.getLength(); i++) {
         const current = [coordinate[0], coordinate[1] + i];
@@ -114,26 +113,46 @@ export class Gameboard {
     if (orientation === 'north') {
       for (let i = 0; i < ship.getLength(); i++) {
         const current = [coordinate[0], coordinate[1] + i];
-        this.shipPositions[`${current}`] = ship;
+        this.shipCoordinates[`${current}`] = ship;
       }
     }
     if (orientation === 'east') {
       for (let i = 0; i < ship.getLength(); i++) {
         const current = [coordinate[0] + i, coordinate[1]];
-        this.shipPositions[`${current}`] = ship;
+        this.shipCoordinates[`${current}`] = ship;
       }
     }
     if (orientation === 'south') {
       for (let i = 0; i < ship.getLength(); i++) {
         const current = [coordinate[0], coordinate[1] - i];
-        this.shipPositions[`${current}`] = ship;
+        this.shipCoordinates[`${current}`] = ship;
       }
     }
     if (orientation === 'west') {
       for (let i = 0; i < ship.getLength(); i++) {
         const current = [coordinate[0] - i, coordinate[1]];
-        this.shipPositions[`${current}`] = ship;
+        this.shipCoordinates[`${current}`] = ship;
       }
     }
+  }
+
+  isHit(coordinate) {
+    for (let hit of this.hitCoordinates) {
+      if (hit[0] === coordinate[0] && hit[1] === coordinate[1]) return true;
+    }
+    return false;
+  }
+
+  hit(coordinate) {
+    if (!this.isValidCooridinate(coordinate) || this.isHit(coordinate))
+      throw new Error(`Invalid hit coordinate`);
+
+    this.hitCoordinates.push(coordinate);
+    if (!this.isEmpty(coordinate)) {
+      const ship = this.shipCoordinates[`${coordinate}`];
+      ship.hit();
+      return true;
+    }
+    return false;
   }
 }
