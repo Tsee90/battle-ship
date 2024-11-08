@@ -148,7 +148,7 @@ export class Gameboard {
     return false;
   }
 
-  hit(coordinate) {
+  receiveAttack(coordinate) {
     if (!this.isValidCooridinate(coordinate) || this.isHit(coordinate))
       throw new Error(`Invalid hit coordinate`);
 

@@ -80,32 +80,34 @@ test('place ship error: duplicate', () => {
 });
 
 /* 
-  Following test hits on gameboard
+  Following test receiveAttack on gameboard
 */
 
 test('hit ship', () => {
   const gameboard = new Gameboard();
   gameboard.place(gameboard.getPatrol(), [5, 5], 'west');
-  expect(gameboard.hit([4, 5])).toEqual(true);
+  expect(gameboard.receiveAttack([4, 5])).toEqual(true);
 });
 
 test('miss ship', () => {
   const gameboard = new Gameboard();
   gameboard.place(gameboard.getPatrol(), [5, 5], 'east');
-  expect(gameboard.hit([4, 5])).toEqual(false);
+  expect(gameboard.receiveAttack([4, 5])).toEqual(false);
 });
 
 test('hit error overlap', () => {
   const gameboard = new Gameboard();
   gameboard.place(gameboard.getPatrol(), [5, 5], 'south');
-  gameboard.hit([5, 6]);
-  expect(() => gameboard.hit([5, 6])).toThrow(`Invalid hit coordinate`);
+  gameboard.receiveAttack([5, 6]);
+  expect(() => gameboard.receiveAttack([5, 6])).toThrow(
+    `Invalid hit coordinate`
+  );
 });
 
 test('sink ship', () => {
   const gameboard = new Gameboard();
   gameboard.place(gameboard.getPatrol(), [5, 5], 'south');
-  gameboard.hit([5, 5]);
-  gameboard.hit([5, 4]);
+  gameboard.receiveAttack([5, 5]);
+  gameboard.receiveAttack([5, 4]);
   expect(gameboard.getPatrol().isSunk()).toEqual(true);
 });
