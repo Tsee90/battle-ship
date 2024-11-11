@@ -176,4 +176,13 @@ export class Gameboard {
       return true;
     return false;
   }
+  reset() {
+    this.shipCoordinates = {};
+    this.hitCoordinates = [];
+    this.carrier.reset();
+    this.battleship.reset();
+    this.destroyer.reset();
+    this.submarine.reset();
+    this.patrol.reset();
+  }
 }

@@ -22,10 +22,10 @@ export class Player {
 export class Computer extends Player {
   constructor(name) {
     super(name);
-    this.#init();
+    this.placeAll();
   }
 
-  #init() {
+  placeAll() {
     this.gameboard.place(this.gameboard.getCarrier(), [0, 0], 'south');
     this.gameboard.place(this.gameboard.getBattleship(), [1, 0], 'south');
     this.gameboard.place(this.gameboard.getDestroyer(), [2, 0], 'south');

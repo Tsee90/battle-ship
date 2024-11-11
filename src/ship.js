@@ -20,4 +20,7 @@ export class Ship {
   getName() {
     return this.name;
   }
+  reset() {
+    this.hits = 0;
+  }
 }
