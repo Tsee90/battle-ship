@@ -56,6 +56,10 @@ export class Gameboard {
     return true;
   }
 
+  getShipAt(coordinate) {
+    return this.shipCoordinates[`${coordinate}`];
+  }
+
   isValidOrientation(orientation) {
     if (
       orientation === 'north' ||
@@ -82,7 +86,7 @@ export class Gameboard {
 
     if (orientation === 'north') {
       for (let i = 0; i < ship.getLength(); i++) {
-        const current = [coordinate[0], coordinate[1] + i];
+        const current = [coordinate[0], coordinate[1] - i];
         if (!this.isEmpty(current) || !this.isValidCooridinate(current))
           result = false;
       }
@@ -96,7 +100,7 @@ export class Gameboard {
     }
     if (orientation === 'south') {
       for (let i = 0; i < ship.getLength(); i++) {
-        const current = [coordinate[0], coordinate[1] - i];
+        const current = [coordinate[0], coordinate[1] + i];
         if (!this.isEmpty(current) || !this.isValidCooridinate(current))
           result = false;
       }
@@ -112,12 +116,11 @@ export class Gameboard {
   }
 
   place(ship, coordinate, orientation) {
-    if (!this.isPlaceable(ship, coordinate, orientation))
-      throw new Error(`Invalid placement`);
+    if (!this.isPlaceable(ship, coordinate, orientation)) return null;
 
     if (orientation === 'north') {
       for (let i = 0; i < ship.getLength(); i++) {
-        const current = [coordinate[0], coordinate[1] + i];
+        const current = [coordinate[0], coordinate[1] - i];
         this.shipCoordinates[`${current}`] = ship;
       }
     }
@@ -129,7 +132,7 @@ export class Gameboard {
     }
     if (orientation === 'south') {
       for (let i = 0; i < ship.getLength(); i++) {
-        const current = [coordinate[0], coordinate[1] - i];
+        const current = [coordinate[0], coordinate[1] + i];
         this.shipCoordinates[`${current}`] = ship;
       }
     }
@@ -151,7 +154,7 @@ export class Gameboard {
 
   receiveAttack(coordinate) {
     if (!this.isValidCooridinate(coordinate) || this.isHit(coordinate))
-      throw new Error(`Invalid hit coordinate`);
+      return null;
 
     this.hitCoordinates.push(coordinate);
     if (!this.isEmpty(coordinate)) {

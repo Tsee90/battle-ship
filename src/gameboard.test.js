@@ -6,7 +6,7 @@ import { Gameboard } from './gameboard.js';
 
 test('place carrier ship', () => {
   const gameboard = new Gameboard();
-  gameboard.place(gameboard.getCarrier(), [0, 0], 'north');
+  gameboard.place(gameboard.getCarrier(), [0, 0], 'south');
   expect(gameboard.getCoordinates(gameboard.getCarrier())).toEqual([
     [0, 0],
     [0, 1],
@@ -18,7 +18,7 @@ test('place carrier ship', () => {
 
 test('place patrol ship', () => {
   const gameboard = new Gameboard();
-  gameboard.place(gameboard.getPatrol(), [5, 5], 'south');
+  gameboard.place(gameboard.getPatrol(), [5, 5], 'north');
   expect(gameboard.getCoordinates(gameboard.getPatrol())).toEqual([
     [5, 5],
     [5, 4],
@@ -27,8 +27,8 @@ test('place patrol ship', () => {
 
 test('place two ships', () => {
   const gameboard = new Gameboard();
-  gameboard.place(gameboard.getPatrol(), [5, 5], 'south');
-  gameboard.place(gameboard.getCarrier(), [0, 0], 'north');
+  gameboard.place(gameboard.getPatrol(), [5, 5], 'north');
+  gameboard.place(gameboard.getCarrier(), [0, 0], 'south');
   expect(gameboard.getCoordinates(gameboard.getPatrol())).toEqual([
     [5, 5],
     [5, 4],
@@ -44,39 +44,29 @@ test('place two ships', () => {
 
 test('place non-ship error', () => {
   const gameboard = new Gameboard();
-  expect(() => gameboard.place('String Ship', [0, 0], 'north')).toThrow(
-    'Invalid placement'
-  );
+  expect(gameboard.place('String Ship', [0, 0], 'south')).toBe(null);
 });
 
 test('place ship error: orientation off board', () => {
   const gameboard = new Gameboard();
-  expect(() =>
-    gameboard.place(gameboard.getCarrier(), [0, 0], 'south')
-  ).toThrow(`Invalid placement`);
+  expect(gameboard.place(gameboard.getCarrier(), [0, 0], 'north')).toBe(null);
 });
 
 test('place ship error: start Coordinates', () => {
   const gameboard = new Gameboard();
-  expect(() =>
-    gameboard.place(gameboard.getCarrier(), [0, -1], 'north')
-  ).toThrow(`Invalid placement`);
+  expect(gameboard.place(gameboard.getCarrier(), [0, -1], 'south')).toBe(null);
 });
 
 test('place ship error: overlap', () => {
   const gameboard = new Gameboard();
-  gameboard.place(gameboard.getPatrol(), [0, 0], 'north');
-  expect(() =>
-    gameboard.place(gameboard.getCarrier(), [0, 0], 'north')
-  ).toThrow(`Invalid placement`);
+  gameboard.place(gameboard.getPatrol(), [0, 0], 'south');
+  expect(gameboard.place(gameboard.getCarrier(), [0, 0], 'south')).toBe(null);
 });
 
 test('place ship error: duplicate', () => {
   const gameboard = new Gameboard();
-  gameboard.place(gameboard.getPatrol(), [0, 0], 'north');
-  expect(() => gameboard.place(gameboard.getPatrol(), [9, 9], 'south')).toThrow(
-    `Invalid placement`
-  );
+  gameboard.place(gameboard.getPatrol(), [0, 0], 'south');
+  expect(gameboard.place(gameboard.getPatrol(), [9, 9], 'north')).toBe(null);
 });
 
 /* 
@@ -97,16 +87,14 @@ test('miss ship', () => {
 
 test('hit error overlap', () => {
   const gameboard = new Gameboard();
-  gameboard.place(gameboard.getPatrol(), [5, 5], 'south');
+  gameboard.place(gameboard.getPatrol(), [5, 5], 'north');
   gameboard.receiveAttack([5, 6]);
-  expect(() => gameboard.receiveAttack([5, 6])).toThrow(
-    `Invalid hit coordinate`
-  );
+  expect(gameboard.receiveAttack([5, 6])).toBe(null);
 });
 
 test('sink ship via receiveAttack', () => {
   const gameboard = new Gameboard();
-  gameboard.place(gameboard.getPatrol(), [5, 5], 'south');
+  gameboard.place(gameboard.getPatrol(), [5, 5], 'north');
   gameboard.receiveAttack([5, 5]);
   gameboard.receiveAttack([5, 4]);
   expect(gameboard.getPatrol().isSunk()).toEqual(true);
