@@ -155,6 +155,12 @@ export class DOM {
     }
   }
 
+  updateMessage(message) {
+    const messageContainer = document.querySelector('#messages');
+    messageContainer.textContent = '';
+    messageContainer.textContent = message;
+  }
+
   updateDisplay() {
     this.mainContainer.innerHTML = '';
     this.board1 = this.createBoard(this.player1, true);
@@ -163,20 +169,39 @@ export class DOM {
     this.mainContainer.appendChild(this.board2);
   }
 
+  grayOut() {
+    const grayScreen = this.createDiv('gray-screen');
+    const retryButton = document.createElement('button');
+    retryButton.id = 'retry';
+    retryButton.textContent = 'Retry';
+    grayScreen.appendChild(retryButton);
+    this.mainContainer.appendChild(grayScreen);
+  }
+
+  getRetry() {
+    return document.querySelector('#retry');
+  }
+
   reset() {
     const draggables = this.createDragContainer(this.player1);
     this.mainContainer.innerHTML = '';
     this.board1 = this.createBoard(this.player1, true);
     this.mainContainer.appendChild(this.board1);
     this.mainContainer.appendChild(draggables);
+    this.updateMessage(
+      'Drag and drop your ships. Use the rotate icon in the top right to change the orientation of your ships. Press start when all ships have been positioned.'
+    );
   }
 
   #init() {
     const body = document.querySelector('body');
-    const draggables = this.createDragContainer(this.player1);
+    const title = this.createDiv('title');
+    title.textContent = 'BATTLESHIP';
+    const messages = this.createDiv('messages');
+
+    body.appendChild(title);
     body.appendChild(this.mainContainer);
-    this.board1 = this.createBoard(this.player1, true);
-    this.mainContainer.appendChild(this.board1);
-    this.mainContainer.appendChild(draggables);
+    body.appendChild(messages);
+    this.reset();
   }
 }

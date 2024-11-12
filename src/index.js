@@ -51,6 +51,14 @@ function reset() {
   startScreenEventListeners();
 }
 
+function createRetryListener() {
+  const retry = dom.getRetry();
+  retry.addEventListener('click', (event) => {
+    event.preventDefault();
+    reset();
+  });
+}
+
 function clickTile(event) {
   event.preventDefault();
   const coordinate = event.target.coordinate;
@@ -58,10 +66,9 @@ function clickTile(event) {
   if (attack !== null) {
     dom.updateDisplay();
     if (player2Board.isAllSunk()) {
-      alert('Player Wins');
-      setTimeout(() => {
-        reset();
-      }, 1000);
+      dom.updateMessage('Player Wins!');
+      dom.grayOut();
+      createRetryListener();
     } else {
       if (player2 instanceof Computer) {
         let computerAttack = null;
@@ -71,17 +78,16 @@ function clickTile(event) {
       }
       dom.updateDisplay();
       if (player1Board.isAllSunk()) {
-        alert('Computer Wins');
-        setTimeout(() => {
-          reset();
-        }, 1000);
+        dom.updateMessage('Computer Wins!');
+        dom.grayOut();
+        createRetryListener();
       }
     }
   }
   createAttackListener();
 }
 
-function startScreenEventListeners() {
+function createDraggablesListener() {
   const draggables = dom.getDraggables();
   draggables.forEach((div) => {
     div.addEventListener('dragstart', (event) => {
@@ -89,13 +95,18 @@ function startScreenEventListeners() {
       player1Board.removeShip(div.ship);
     });
   });
+}
 
+function createRotateListener() {
   const rotate = dom.getRotate();
   rotate.addEventListener('click', (event) => {
     event.preventDefault();
     dom.rotateDragContainer();
+    createDragContainerListener();
   });
+}
 
+function createStartListener() {
   const start = dom.getStart();
   start.addEventListener('click', (event) => {
     event.preventDefault();
@@ -103,9 +114,34 @@ function startScreenEventListeners() {
       player2.placeAll();
       dom.updateDisplay();
       createAttackListener();
+      dom.updateMessage(
+        'Select a tile on your opponents board to attack. Yellow indicates a miss. Red indicates a hit. Everytime you attack your opponent will attack you back!'
+      );
+    } else {
+      dom.updateMessage('Please place all ships before starting.');
     }
   });
+}
 
+function createDragContainerListener() {
+  const dragContainer = dom.getDragContainer();
+  dragContainer.addEventListener('dragover', (event) => {
+    event.preventDefault();
+  });
+
+  dragContainer.addEventListener('drop', (event) => {
+    event.preventDefault();
+    const data = event.dataTransfer.getData('text/plain');
+    const draggable = document.getElementById(data);
+    dom.appendDraggable(draggable, dragContainer);
+  });
+}
+
+function startScreenEventListeners() {
+  createDraggablesListener();
+  createRotateListener();
+  createStartListener();
+  createDragContainerListener();
   createDropListener();
 }
 
