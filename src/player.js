@@ -22,7 +22,6 @@ export class Player {
 export class Computer extends Player {
   constructor(name) {
     super(name);
-    this.placeAll();
   }
 
   placeAll() {

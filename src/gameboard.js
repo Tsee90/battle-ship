@@ -43,6 +43,14 @@ export class Gameboard {
     return null;
   }
 
+  removeShip(ship) {
+    for (const [key, value] of Object.entries(this.shipCoordinates)) {
+      if (value === ship) {
+        delete this.shipCoordinates[key];
+      }
+    }
+  }
+
   isValidCooridinate(coordinate) {
     if (
       !Array.isArray(coordinate) ||
@@ -77,11 +85,7 @@ export class Gameboard {
 
   isPlaceable(ship, coordinate, orientation) {
     let result = true;
-    if (
-      !(ship instanceof Ship) ||
-      !this.isValidOrientation(orientation) ||
-      this.getCoordinates(ship)
-    )
+    if (!(ship instanceof Ship) || !this.isValidOrientation(orientation))
       return false;
 
     if (orientation === 'north') {
@@ -176,6 +180,19 @@ export class Gameboard {
       return true;
     return false;
   }
+
+  isAllPlaced() {
+    if (
+      this.getCoordinates(this.carrier) &&
+      this.getCoordinates(this.battleship) &&
+      this.getCoordinates(this.destroyer) &&
+      this.getCoordinates(this.submarine) &&
+      this.getCoordinates(this.patrol)
+    )
+      return true;
+    return false;
+  }
+
   reset() {
     this.shipCoordinates = {};
     this.hitCoordinates = [];
