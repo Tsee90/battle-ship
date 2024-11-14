@@ -34,7 +34,6 @@ function createDropListener() {
             tile.coordinate,
             draggable.orientation
           );
-          console.log(player1Board.shipCoordinates);
           tile.appendChild(draggable);
         } else {
           dom.appendDraggable(draggable, dom.getDragContainer());
@@ -47,6 +46,7 @@ function createDropListener() {
 function reset() {
   player1Board.reset();
   player2Board.reset();
+  player2.reset();
   dom.reset();
   startScreenEventListeners();
 }
@@ -71,10 +71,9 @@ function clickTile(event) {
       createRetryListener();
     } else {
       if (player2 instanceof Computer) {
-        let computerAttack = null;
-        while (computerAttack === null) {
-          computerAttack = player1Board.receiveAttack(player2.attack());
-        }
+        const attack = player2.attack();
+        const hit = player1Board.receiveAttack(attack);
+        player2.update(attack, hit);
       }
       dom.updateDisplay();
       if (player1Board.isAllSunk()) {
@@ -115,7 +114,7 @@ function createStartListener() {
       dom.updateDisplay();
       createAttackListener();
       dom.updateMessage(
-        'Select a tile on your opponents board to attack. Yellow indicates a miss. Red indicates a hit. Everytime you attack your opponent will attack you back!'
+        'Select a tile on your opponents board (right) to attack. Yellow indicates a miss. Red indicates a hit. Everytime you attack your opponent will attack you back!'
       );
     } else {
       dom.updateMessage('Please place all ships before starting.');
@@ -133,7 +132,9 @@ function createDragContainerListener() {
     event.preventDefault();
     const data = event.dataTransfer.getData('text/plain');
     const draggable = document.getElementById(data);
-    dom.appendDraggable(draggable, dragContainer);
+    if (draggable) {
+      dom.appendDraggable(draggable, dragContainer);
+    }
   });
 }
 

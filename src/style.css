@@ -20,6 +20,7 @@ body {
   font-size: 20px;
   display: flex;
   text-align: center;
+  height: 200px;
 }
 
 #main-container {
@@ -46,11 +47,12 @@ body {
 }
 
 .gameboard {
+  box-sizing: border-box;
   display: flex;
   flex-wrap: wrap;
-  max-width: 500px;
-  min-width: 500px;
-  max-height: 500px;
+  max-width: 502px;
+  min-width: 502px;
+  max-height: 502px;
   border: 1px solid black;
 }
 
@@ -83,8 +85,8 @@ body {
   box-sizing: border-box;
   display: grid;
   position: relative;
-  height: 500px;
-  width: 500px;
+  height: 502px;
+  width: 502px;
   padding: 50px;
 }
 
@@ -135,6 +137,10 @@ body {
   background-color: gray;
   z-index: 1000;
   position: absolute;
+}
+
+.draggable:hover {
+  cursor: grab;
 }
 
 #carrier.east {
@@ -195,4 +201,10 @@ body {
   height: 98px;
   width: 48px;
   grid-area: patrol;
+}
+
+#rotate:hover {
+  box-sizing: border-box;
+  border: 1px solid gray;
+  border-radius: 50%;
 }

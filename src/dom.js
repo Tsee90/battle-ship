@@ -189,7 +189,7 @@ export class DOM {
     this.mainContainer.appendChild(this.board1);
     this.mainContainer.appendChild(draggables);
     this.updateMessage(
-      'Drag and drop your ships. Use the rotate icon in the top right to change the orientation of your ships. Press start when all ships have been positioned.'
+      'Drag and drop your ships on the right to your board on the left. Use the rotate icon in the top right to change the orientation of your ships. Press start when all ships have been positioned.'
     );
   }
 
