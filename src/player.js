@@ -196,6 +196,7 @@ export class Computer extends Player {
       const check = this.checkAround(hit);
       if (check) return check;
     }
+
     return this.randomCoordinate();
   }
 
